@@ -1,76 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Fun Money Budget</title>
-  <style>
-    :root { color-scheme: dark; font-family: system-ui, -apple-system, Segoe UI, sans-serif; }
-    * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #10151c; color: #f4f7fa; padding: 20px; }
-    main { width: min(100%, 390px); background: #1b2430; border: 1px solid #334152; border-radius: 20px; padding: 28px; box-shadow: 0 18px 60px #0005; }
-    h1 { font-size: 1.15rem; margin: 0 0 28px; font-weight: 600; }
-    .label { color: #aab9c9; font-size: .9rem; }
-    .balance { font-size: clamp(3rem, 12vw, 4.2rem); font-weight: 750; letter-spacing: -2px; margin: 4px 0 28px; }
-    form { display: grid; gap: 10px; }
-    input, button { font: inherit; border-radius: 11px; padding: 14px 16px; width: 100%; }
-    input { background: #111922; border: 1px solid #445468; color: white; font-size: 1.15rem; outline-offset: 2px; }
-    input:focus { outline: 2px solid #70c69a; }
-    button { border: none; background: #55bc87; color: #0b2117; font-weight: 750; cursor: pointer; }
-    button:hover { background: #76d6a2; }
-    .secondary { background: transparent; border: 1px solid #445468; color: #b8c6d5; margin-top: 18px; }
-    .secondary:hover { background: #283442; }
-    .message { min-height: 20px; color: #ffc080; font-size: .85rem; margin: 10px 0 0; }
-    .negative { color: #ff9292; }
-  </style>
-</head>
-<body>
-  <main>
-    <h1>Fun Money</h1>
-    <div class="label">Available balance</div>
-    <div class="balance" id="balance">$100.00</div>
-    <form id="spendForm">
-      <label class="label" for="amount">Log a purchase</label>
-      <input id="amount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="Amount ($)" required autofocus />
-      <button type="submit">Subtract Spending</button>
-    </form>
-    <p class="message" id="message" role="status"></p>
-    <button type="button" class="secondary" id="reset">Reset to $100</button>
-  </main>
-  <script>
-    const STARTING_BALANCE_CENTS = 10000;
-    let balanceCents = STARTING_BALANCE_CENTS;
-    const balanceDisplay = document.getElementById('balance');
-    const amountInput = document.getElementById('amount');
-    const message = document.getElementById('message');
-    const format = cents => (cents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-    function render() {
-      balanceDisplay.textContent = format(balanceCents);
-      balanceDisplay.classList.toggle('negative', balanceCents < 0);
-    }
-    document.getElementById('spendForm').addEventListener('submit', event => {
-      event.preventDefault();
-      const amount = Number(amountInput.value);
-      if (!Number.isFinite(amount) || amount <= 0) return;
-      const cents = Math.round(amount * 100);
-      if (cents > balanceCents) {
-        message.textContent = 'Not enough fun money for that purchase.';
-        return;
-      }
-      balanceCents -= cents;
-      message.textContent = '';
-      amountInput.value = '';
-      render();
-      amountInput.focus();
-    });
-    document.getElementById('reset').addEventListener('click', () => {
-      balanceCents = STARTING_BALANCE_CENTS;
-      message.textContent = '';
-      amountInput.value = '';
-      render();
-      amountInput.focus();
-    });
-    render();
-  </script>
-</body>
-</html>
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#101719"><meta name="apple-mobile-web-app-capable" content="yes"><title>Fun Money</title><style>
+:root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color-scheme:dark;background:#101719;color:#f3f7f5}*{box-sizing:border-box}body{margin:0;min-height:100dvh;display:flex;justify-content:center;padding:calc(38px + env(safe-area-inset-top)) 18px calc(30px + env(safe-area-inset-bottom))}.app{width:min(100%,420px)}header{display:flex;align-items:center;justify-content:space-between;margin-bottom:62px}header strong{font-size:18px;letter-spacing:-.4px}.sub{color:#9eaaa7;font-size:13px}.balance-label{color:#a7b2ae;font-size:14px}.balance{font-size:clamp(54px,15vw,72px);letter-spacing:-3px;font-weight:750;line-height:1.2;margin:7px 0 10px;font-variant-numeric:tabular-nums}.next{font-size:13px;color:#a5b3ad;margin-bottom:48px}.card{border:1px solid #2a3834;background:#18221f;border-radius:19px;padding:20px;margin-bottom:17px}label{display:block;color:#aebbb5;font-size:13px;margin-bottom:12px}.input-row{display:flex;gap:10px}input{min-width:0;flex:1;background:#101916;color:white;border:1px solid #35443e;border-radius:12px;padding:15px;font-size:19px;outline:none}input:focus{border-color:#65d6a0}button{border:0;border-radius:12px;padding:14px 18px;font-size:15px;font-weight:700;cursor:pointer;touch-action:manipulation}.spend{background:#5fe0a0;color:#092316}.secondary{background:transparent;color:#acbcb4;border:1px solid #34433d;font-size:13px;padding:11px 14px}.section-title{display:flex;justify-content:space-between;align-items:center;margin:32px 0 12px;font-size:14px;font-weight:650}.history{padding:0;margin:0;list-style:none}.history li{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid #27342f;color:#c2cdc8;font-size:14px}.history li b{color:#f2f7f4;font-variant-numeric:tabular-nums}.history li.deposit b{color:#65e6a6}.empty{color:#82948b;font-size:14px;padding:12px 0}.footer{margin-top:42px;display:flex;align-items:center;justify-content:space-between;gap:10px}.status{font-size:12px;color:#819188}.toast{position:fixed;top:calc(16px + env(safe-area-inset-top));left:50%;transform:translate(-50%,-120px);opacity:0;pointer-events:none;background:#1e4934;border:1px solid #39875e;color:#9cf0ba;padding:15px 20px;border-radius:15px;box-shadow:0 12px 36px #0008;text-align:center;min-width:230px;transition:transform .35s ease,opacity .35s ease;z-index:2}.toast.show{transform:translate(-50%,0);opacity:1}.toast b{font-size:24px;display:block}.toast span{font-size:12px}.error{color:#ff9b9b;font-size:12px;min-height:18px;margin-top:9px}button:focus-visible{outline:2px solid white;outline-offset:3px}
+</style></head><body><main class="app"><header><strong>Fun Money</strong><span class="sub">$10 / day</span></header><div class="balance-label">Available to spend</div><div id="balance" class="balance">$100.00</div><div id="next" class="next">Next +$10 tomorrow</div><section class="card"><form id="spend-form"><label for="amount">Log a purchase</label><div class="input-row"><input id="amount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="$0.00" required><button class="spend" type="submit">Spend</button></div><div id="error" class="error" role="alert"></div></form></section><div class="section-title"><span>Activity</span><button id="undo" class="secondary" type="button">Undo last</button></div><ul id="history" class="history"></ul><div class="footer"><span class="status">Saved on this device</span><button id="reset" class="secondary" type="button">Reset</button></div></main><div id="toast" class="toast" role="status" aria-live="polite"></div><script>
+(()=>{'use strict';const KEY='fun-money-v1';const START=10000,DAILY=1000;const $=id=>document.getElementById(id);const money=c=>(c/100).toLocaleString('en-US',{style:'currency',currency:'USD'});const dayString=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;const today=()=>dayString(new Date());const parseDay=s=>{const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d,12)};const dayDiff=(a,b)=>Math.round((Date.UTC(...a.split('-').map((v,i)=>i===1?Number(v)-1:Number(v)))-Date.UTC(...b.split('-').map((v,i)=>i===1?Number(v)-1:Number(v))))/86400000);let state;let toastTimer;
+function load(){try{const x=JSON.parse(localStorage.getItem(KEY));if(x&&Number.isSafeInteger(x.balance)&&typeof x.lastDay==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(x.lastDay)&&Array.isArray(x.history))return x}catch(e){}return {balance:START,lastDay:today(),history:[]}}
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}function notify(c,days){const el=$('toast');el.innerHTML=`<b>+${money(c)}</b><span>${days===1?'Daily allowance added!':`${days} days of allowance added!`}</span>`;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3500)}
+function check(){const now=today();const days=dayDiff(now,state.lastDay);if(days>0){const amount=days*DAILY;state.balance+=amount;state.lastDay=now;state.history.unshift({type:'deposit',amount,day:now,days});state.history=state.history.slice(0,100);save();render();notify(amount,days)}else{render()}}
+function render(){$('balance').textContent=money(state.balance);const next=parseDay(state.lastDay);next.setDate(next.getDate()+1);$('next').textContent=`Next +$10: ${next.toLocaleDateString('en-US',{month:'short',day:'numeric'})} at 12:00 AM`;$('history').replaceChildren();if(!state.history.length){const li=document.createElement('li');li.className='empty';li.textContent='No activity yet';$('history').append(li)}for(const item of state.history.slice(0,15)){const li=document.createElement('li');if(item.type==='deposit')li.className='deposit';const desc=document.createElement('span');desc.textContent=(item.type==='deposit'?'Daily allowance':'Purchase')+' · '+item.day;const value=document.createElement('b');value.textContent=(item.type==='deposit'?'+':'−')+money(item.amount);li.append(desc,value);$('history').append(li)}$('undo').disabled=!state.history.length}
+$('spend-form').addEventListener('submit',e=>{e.preventDefault();check();const raw=$('amount').value.trim(),value=Number(raw),cents=Math.round(value*100);if(!raw||!Number.isFinite(value)||!Number.isSafeInteger(cents)||cents<=0){$('error').textContent='Enter a valid amount.';return}if(cents>state.balance){$('error').textContent='Not enough fun money.';return}state.balance-=cents;state.history.unshift({type:'spend',amount:cents,day:today()});state.history=state.history.slice(0,100);save();$('amount').value='';$('error').textContent='';$('amount').blur();render()});$('undo').addEventListener('click',()=>{if(!state.history.length)return;const last=state.history.shift();state.balance+=last.type==='deposit'?-last.amount:last.amount;if(last.type==='deposit'){// Keep the date credited to prevent duplicating deposits on refresh.
+}save();render()});$('reset').addEventListener('click',()=>{if(!confirm('Reset to $100 and erase all activity?'))return;state={balance:START,lastDay:today(),history:[]};save();$('error').textContent='';render()});state=load();check();document.addEventListener('visibilitychange',()=>{if(!document.hidden)check()});window.addEventListener('pageshow',check);window.addEventListener('focus',check);setInterval(()=>{if(!document.hidden)check()},15000);
+})();
+</script></body></html>
