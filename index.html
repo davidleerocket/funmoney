@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fun Money Budget</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, -apple-system, Segoe UI, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #10151c; color: #f4f7fa; padding: 20px; }
+    main { width: min(100%, 390px); background: #1b2430; border: 1px solid #334152; border-radius: 20px; padding: 28px; box-shadow: 0 18px 60px #0005; }
+    h1 { font-size: 1.15rem; margin: 0 0 28px; font-weight: 600; }
+    .label { color: #aab9c9; font-size: .9rem; }
+    .balance { font-size: clamp(3rem, 12vw, 4.2rem); font-weight: 750; letter-spacing: -2px; margin: 4px 0 28px; }
+    form { display: grid; gap: 10px; }
+    input, button { font: inherit; border-radius: 11px; padding: 14px 16px; width: 100%; }
+    input { background: #111922; border: 1px solid #445468; color: white; font-size: 1.15rem; outline-offset: 2px; }
+    input:focus { outline: 2px solid #70c69a; }
+    button { border: none; background: #55bc87; color: #0b2117; font-weight: 750; cursor: pointer; }
+    button:hover { background: #76d6a2; }
+    .secondary { background: transparent; border: 1px solid #445468; color: #b8c6d5; margin-top: 18px; }
+    .secondary:hover { background: #283442; }
+    .message { min-height: 20px; color: #ffc080; font-size: .85rem; margin: 10px 0 0; }
+    .negative { color: #ff9292; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Fun Money</h1>
+    <div class="label">Available balance</div>
+    <div class="balance" id="balance">$100.00</div>
+    <form id="spendForm">
+      <label class="label" for="amount">Log a purchase</label>
+      <input id="amount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="Amount ($)" required autofocus />
+      <button type="submit">Subtract Spending</button>
+    </form>
+    <p class="message" id="message" role="status"></p>
+    <button type="button" class="secondary" id="reset">Reset to $100</button>
+  </main>
+  <script>
+    const STARTING_BALANCE_CENTS = 10000;
+    let balanceCents = STARTING_BALANCE_CENTS;
+    const balanceDisplay = document.getElementById('balance');
+    const amountInput = document.getElementById('amount');
+    const message = document.getElementById('message');
+    const format = cents => (cents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    function render() {
+      balanceDisplay.textContent = format(balanceCents);
+      balanceDisplay.classList.toggle('negative', balanceCents < 0);
+    }
+    document.getElementById('spendForm').addEventListener('submit', event => {
+      event.preventDefault();
+      const amount = Number(amountInput.value);
+      if (!Number.isFinite(amount) || amount <= 0) return;
+      const cents = Math.round(amount * 100);
+      if (cents > balanceCents) {
+        message.textContent = 'Not enough fun money for that purchase.';
+        return;
+      }
+      balanceCents -= cents;
+      message.textContent = '';
+      amountInput.value = '';
+      render();
+      amountInput.focus();
+    });
+    document.getElementById('reset').addEventListener('click', () => {
+      balanceCents = STARTING_BALANCE_CENTS;
+      message.textContent = '';
+      amountInput.value = '';
+      render();
+      amountInput.focus();
+    });
+    render();
+  </script>
+</body>
+</html>
